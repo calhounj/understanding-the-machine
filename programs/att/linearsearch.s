@@ -1,0 +1,32 @@
+#Search for a value, say 10 in an array
+.globl _start
+.section .data
+array_size:
+	.quad 7
+my_array:
+	.quad 20, 22, 40, 5, 10, 7, 9
+
+.section .text
+_start:
+	movq array_size, %rcx
+	movq $my_array, %r8
+	movq $10, %r10 #Value I want to find
+	movq $0, %rdi #Default value; 0 means not found
+
+	cmp $0, %rcx
+	je finish
+
+mainloop:
+	movq -8(%r8,%rcx,8), %rax
+	cmp %r10, %rax
+	jne loopcontrol
+
+	movq $1, %rdi
+	jmp finish
+
+loopcontrol:
+	loopq mainloop
+
+finish:
+	movq $60, %rax
+	syscall

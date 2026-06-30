@@ -1,0 +1,32 @@
+#Using the Generalized Addressing Mode Syntax
+.globl _start
+
+.section .data
+array_size:
+	.quad 5
+my_array:
+	.quad 1, 30, 5, 7, 9
+
+.section .text
+_start:
+	movq array_size, %rcx
+#movq $0, %rbx #Index of first element
+	movq $0, %rdi #Largest element will collect here
+	movq $my_array, %r8
+
+	cmp $0, %rcx
+	je finish
+
+mainloop:
+	movq -8(%r8,%rcx,8), %rax #Get the next value indexed by %rbx
+	cmp %rdi, %rax
+	jbe loopcontrol
+
+	movq %rax, %rdi
+
+loopcontrol:
+	loopq mainloop
+
+finish:
+	movq $60, %rax
+	syscall
