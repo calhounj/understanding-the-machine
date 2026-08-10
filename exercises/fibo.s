@@ -1,0 +1,20 @@
+#Exercise finding F_8
+.globl _start
+.section .text
+_start:
+#%rax - current Fibonacci number
+#%rbx - previous Fibonacci number
+#%rcx - loop counter
+	movq $1, %rax
+	movq $0, %rbx
+	movq $7, %rcx
+
+mainloop:
+	xchgq %rbx, %rax
+	addq %rbx, %rax
+	loopq mainloop
+
+complete:
+	movq %rax, %rdi
+	movq $60, %rax
+	syscall
