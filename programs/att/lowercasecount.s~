@@ -1,0 +1,32 @@
+#Count the number of lower case letters
+.globl _start
+.section .data
+mytext:
+	"This is a string of characters.\0"
+
+.section .text
+_start:
+#Initialization: move a pointer to the string into %rbx
+	movq $mytext, %rbx
+#Count starts at zero
+	movq $0, %rdi
+
+mainloop:
+#Get the next byte. So, move 1 byte (8 bits) into the lower 8 bits of %rax
+	movb (%rbx), %al
+#Quit if we hit the null terminator \0
+	cmpb $0, %al
+	je finish
+#Go to the next byte if the value isn't between a and z
+	cmpb $'a', %al
+	jb loopcontrol
+	cmpb $'z', %al
+	ja loopcontrol
+
+	incq %rdi
+loopcontrol:
+	incq %rbx
+	jmp mainloop
+finish:
+	movq $60, %rax
+	syscall
